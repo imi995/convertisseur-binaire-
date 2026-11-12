@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertisseur Décimal / Binaire</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #eef2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .conteneur {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sous-titre {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .groupe-champ {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        .erreur {
+            color: #dc2626;
+            font-size: 0.9rem;
+            min-height: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2f4b9f;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="conteneur">
+        <h1>Convertisseur Décimal ⇄ Binaire</h1>
+        <p class="sous-titre">Tapez un nombre dans l'un des champs pour le convertir instantanément.</p>
+
+        <div class="groupe-champ">
+            <label for="decimal">Nombre Décimal (Base 10)</label>
+            <input type="text" id="decimal" placeholder="Ex: 42" autocomplete="off">
+        </div>
+
+        <div class="groupe-champ">
+            <label for="binaire">Nombre Binaire (Base 2)</label>
+            <input type="text" id="binaire" placeholder="Ex: 101010" autocomplete="off">
+        </div>
+
+        <p id="message-erreur" class="erreur"></p>
+
+        <button id="btn-effacer">Effacer tout</button>
+    </main>
+
+    <script>
+        const inputDecimal = document.getElementById('decimal');
+        const inputBinaire = document.getElementById('binaire');
+        const messageErreur = document.getElementById('message-erreur');
+        const btnEffacer = document.getElementById('btn-effacer');
+
+        // Conversion Décimal -> Binaire
+        inputDecimal.addEventListener('input', () => {
+            const valeur = inputDecimal.value.trim();
+            messageErreur.textContent = '';
+
+            if (valeur === '') {
+                inputBinaire.value = '';
+                return;
+            }
+
+            if (/^\d+$/.test(valeur)) {
+                const nombre = BigInt(valeur);
+                inputBinaire.value = nombre.toString(2);
+            } else {
+                inputBinaire.value = '';
+                messageErreur.textContent = 'Erreur : Entrez uniquement des chiffres entiers positifs (0-9).';
+            }
+        });
+
+        // Conversion Binaire -> Décimal (CORRIGÉ)
+        inputBinaire.addEventListener('input', () => {
+            const valeur = inputBinaire.value.trim();
+            messageErreur.textContent = '';
+
+            if (valeur === '') {
+                inputDecimal.value = '';
+                return;
+            }
+
+            // Vérifie strictement la présence de 0 et de 1
+            if (/^[01]+$/.test(valeur)) {
+                const nombre = BigInt('0b' + valeur);
+                inputDecimal.value = nombre.toString(10);
+            } else {
+                inputDecimal.value = '';
+                messageErreur.textContent = 'Erreur : Un nombre binaire ne contient que des 0 et des 1.';
+            }
+        });
+
+        // Bouton pour effacer
+        btnEffacer.addEventListener('click', () => {
+            inputDecimal.value = '';
+            inputBinaire.value = '';
+            messageErreur.textContent = '';
+        });
+    </script>
+
+</body>
+</html>
